@@ -13,17 +13,19 @@ function renderUI(data) {
             <td>${i + 1}</td>
             <td>${product.name}</td>
             <td>${product.price}</td>
+            <td>${product.screen}</td>
+            <td>${product.backCamera}</td>
+            <td>${product.frontCamera}</td>
             <td>
-                <img src="./../../assets/img/${product.image}" width="50" />
+                <img src="${product.img}" width="50" />
             </td>
-            <td>${product.description}</td>
+            <td>${product.desc}</td>
+            <td>${product.type}</td>
             <td>
-                <button class="btn btn-info" data-toggle="modal" data-target="#myModal" onclick="editProduct(${
-                  product.id
-                })">Edit</button>
-                <button class="btn btn-danger" onclick="deleteProduct(${
-                  product.id
-                })">Delete</button>
+                <button class="btn btn-info" data-toggle="modal" data-target="#myModal" onclick="editProduct(${product.id
+      })">Edit</button>
+                <button class="btn btn-danger" onclick="deleteProduct(${product.id
+      })">Delete</button>
             </td>
         </tr>
     `;
@@ -36,7 +38,8 @@ function getListProduct() {
 
   promise
     .then(function (result) {
-      renderUI(result.data);
+      const sortedData = result.data.sort((a, b) => b.price - a.price); // Sorting in descending order
+      renderUI(sortedData); // Call renderUI with sorted data
     })
     .catch(function (error) {
       console.log(error);
@@ -77,6 +80,10 @@ function addProduct() {
   const name = getEle("TenSP").value;
   const price = getEle("GiaSP").value;
   const des = getEle("MoTa").value;
+  const screen = getEle("ManHinhSP").value;
+  const backCam = getEle("CameraSauSP").value;
+  const frontCam = getEle("CameraTruocSP").value;
+  const type = getEle("PhanLoaiSP").value;
 
   var imageName = "";
   const image = getEle("HinhSP");
@@ -85,7 +92,7 @@ function addProduct() {
   }
 
   // tạo đối tượng từ lớp đối tượng Product
-  const product = new Product("", name, price, imageName, des);
+  const product = new Product("", name, price, screen, backCam,   frontCam, imageName, des, type);
 
   const promise = api.createData(product);
 
@@ -127,4 +134,60 @@ function editProduct(id) {
     });
 }
 
+function updateProduct(id) {
+  // Get updated product details from the input fields
+  const updatedName = getEle("TenSP").value;
+  const updatedPrice = getEle("GiaSP").value;
+  const updatedDescription = getEle("MoTa").value;
+  let updatedImageName = "";
+  const image = getEle("HinhSP");
 
+  // Check if a new image was selected for the product
+  if (image && image.files.length > 0) {
+    updatedImageName = image.files[0].name;
+  }
+
+  const updatedProduct = {
+    id: id,
+    name: updatedName,
+    price: updatedPrice,
+    image: updatedImageName, // Ensure this matches the key expected by your backend
+    description: updatedDescription
+  };
+
+  // Call the API to update the product
+  api.updateProductById(id, updatedProduct)
+    .then(function () {
+      alert("Product updated successfully.");
+
+      getListProduct();
+      //close modal
+      document.getElementsByClassName("close")[0].click();
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+
+/** 
+ * Search Product by Item
+ */
+getEle("searchInput").addEventListener('keyup', searchProduct);
+
+function searchProduct() {
+  const searchValue = getEle("searchInput").value.toLowerCase(); // lowecase to prevent case sensitive
+
+  const promise = api.fetchData(); // Fetch all products
+
+  promise
+    .then(function (result) {
+      // Filter products based on the searchValue
+      const filteredData = result.data.filter(product =>
+        product.name.toLowerCase().includes(searchValue)
+      );
+      renderUI(filteredData); // Render the UI with filtered data
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
