@@ -71,7 +71,7 @@
 
     <header>
       <nav class="phoneNav container navbar navbar-expand-lg">
-        <a class="navbar-brand" href="#">CyberPhone</a>
+        <a class="navbar-brand" href="#">CyberToys</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -103,6 +103,11 @@
             <li class="nav-item">
               <a class="nav-link" href="#">Contact</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./src/cart/cart.html">
+                <i class="fa fa-shopping-cart fa-lg"></i>
+              </a>
+            </li>
           </ul>
         </div>
       </nav>
@@ -112,8 +117,8 @@
         <div class="row">
           <div class="col-12 col-md-6 d-flex align-items-center">
             <div>
-              <h1>CyberPhone</h1>
-              <h3>Best Smartphone of 2021!</h3>
+              <h1>CyberToys</h1>
+              <h3>Best Toys of 2021!</h3>
               <p>
                 Cras tortor mi, lobortis quis ornare in, varius scelerisque
                 urna. Vivamus imperdiet dolor nec odio convallis consequat.
@@ -129,13 +134,29 @@
             </div>
           </div>
           <div class="col-6 d-md-block d-none">
-            <img class="img-fluid" src="./../assets/img/product-header-bg.jpg" alt="" />
+            <img
+              class="img-fluid"
+              src="./../assets/img/product-header-bg.jpg"
+              alt=""
+            />
           </div>
         </div>
       </div>
     </section>
     <section class="products container section">
       <h2 class="section-title">-Featured Products-</h2>
+      <div class="option__Product">
+        <select
+          id="form-select"
+          aria-label="Default select example"
+          onchange="onChangeOptionProduct()"
+        >
+          <option value="all" selected>Tất cả</option>
+          <option value="iphone">Iphone</option>
+          <option value="Samsung">Samsung</option>
+        </select>
+      </div>
+
       <div class="products__content">
         <div id="loader" style="display: none" class="loader"></div>
         <div id="productList" class="row"></div>
